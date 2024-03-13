@@ -1,0 +1,24 @@
+<template>
+  <v-navigation-drawer>
+    <v-list>
+      <v-list-item
+        prepend-icon="mdi-view-dashboard"
+        link
+        to="/"
+        title="Dashboard"
+      />
+      <v-list-item
+        prepend-icon="mdi-swap-horizontal-bold"
+        link
+        to="/swap"
+        title="Swapping"
+      />
+      <v-list-item
+        prepend-icon="mdi-chart-box-multiple-outline"
+        link
+        to="stats"
+        title="Statistics"
+      />
+    </v-list>
+  </v-navigation-drawer>
+</template>
