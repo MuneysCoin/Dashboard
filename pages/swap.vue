@@ -1,3 +1,3 @@
 <template>
-  <a>test swap</a>
+  <a>1</a>
 </template>
