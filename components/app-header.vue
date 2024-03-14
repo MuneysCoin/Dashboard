@@ -15,16 +15,14 @@
 </template>
 
 <script setup lang="ts">
-import { useAppStore } from '~/stores/app';
+import { useAppStore } from '../stores/app';
 import { useWeb3Modal } from '@web3modal/wagmi/vue'
-
-const app = useAppStore()
-
-
 import { createWeb3Modal, defaultWagmiConfig } from '@web3modal/wagmi'
 
 import { mainnet, arbitrum } from 'viem/chains'
 import { reconnect } from '@wagmi/core'
+
+const app = useAppStore()
 
 // 1. Define constants
 const projectId = 'b7234ee880f91dcffd7229b192a94c55'
@@ -37,12 +35,21 @@ const metadata = {
   icons: ['https://avatars.githubusercontent.com/u/37784886']
 }
 
+const tokens = {
+  1: {
+    address: "0x74c57783b980a44efa4741ba863a71aded83f71c",
+    image: "https://muneys.com/wp-content/uploads/2024/03/cropped-cropped-OIG2-photoaidcom-cropped-150x150.png"
+  }
+}
+
 const chains = [mainnet, arbitrum]
 const config = defaultWagmiConfig({
   chains,
   projectId,
-  metadata
+  metadata,
+  tokens
 })
+
 
 reconnect(config)
 // 3. Create modal
@@ -53,7 +60,8 @@ createWeb3Modal({
   enableOnramp: true // Optional - false as default
 })
 
-const modal = useWeb3Modal()
+// const modal = useWeb3Modal()
+
 
 </script>
 
