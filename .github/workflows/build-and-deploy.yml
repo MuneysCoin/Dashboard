@@ -23,12 +23,19 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'yarn'
 
+
+    - name: Install dependencies
+      run: yarn install --frozen-lockfile
+
+    - name: Build
+      run: yarn run generate
+
     - name: Publish to Cloudflare Pages
       uses: cloudflare/pages-action@v1
       with:
         apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         accountId: b95c3c1b514398499007e8ba8264b41c
-        projectName: muneysdashboard
-        directory: dist/muneys-dashboard/browser
+        projectName: test-dashboard
+        directory: .output/public
         # Optional: Enable this if you want to have GitHub Deployments triggered
         gitHubToken: ${{ secrets.GITHUB_TOKEN }}
