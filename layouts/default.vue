@@ -11,3 +11,14 @@
     </v-main>
   </v-layout>
 </template>
+
+<script setup lang="ts">
+import { useWeb3Store } from '#imports'; 
+
+const web3 = useWeb3Store()
+
+onMounted(() => {
+  web3.connect();
+})
+
+</script>
