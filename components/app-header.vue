@@ -30,7 +30,7 @@ const projectId = 'b7234ee880f91dcffd7229b192a94c55'
 // 2. Create wagmiConfig
 const metadata = {
   name: 'Web3Modal',
-  description: 'Web3Modal Example',
+  description: 'Connect your wallet',
   url: 'https://app.muneys.com', // origin must match your domain & subdomain
   icons: ['https://avatars.githubusercontent.com/u/37784886']
 }
