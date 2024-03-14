@@ -13,7 +13,8 @@ export default defineNuxtConfig({
         config.plugins.push(vuetify({ autoImport: true }))
       })
     },
-    "@nuxtjs/eslint-module"
+    "@nuxtjs/eslint-module",
+    "@pinia/nuxt"
   ],
   vite: {
     vue: {
