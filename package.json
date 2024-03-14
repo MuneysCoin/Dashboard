@@ -26,5 +26,6 @@
     "typescript": "*",
     "vite-plugin-vuetify": "^2.0.3",
     "vuetify": "^3.5.9"
-  }
+  },
+  "packageManager": "yarn@4.1.1"
 }
