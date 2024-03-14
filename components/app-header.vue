@@ -50,8 +50,10 @@ const config = defaultWagmiConfig({
   tokens
 })
 
+if (process.client) {
+  reconnect(config)
+}
 
-reconnect(config)
 // 3. Create modal
 createWeb3Modal({
   wagmiConfig: config,
