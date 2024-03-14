@@ -59,7 +59,8 @@ createWeb3Modal({
   wagmiConfig: config,
   projectId,
   enableAnalytics: true, // Optional - defaults to your Cloud configuration
-  enableOnramp: true // Optional - false as default
+  enableOnramp: true, // Optional - false as default,
+  themeMode: 'dark'
 })
 
 // const modal = useWeb3Modal()
