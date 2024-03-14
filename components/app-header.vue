@@ -19,7 +19,7 @@ import { useAppStore } from '../stores/app';
 import { useWeb3Modal } from '@web3modal/wagmi/vue'
 import { createWeb3Modal, defaultWagmiConfig } from '@web3modal/wagmi'
 
-import { mainnet, arbitrum } from 'viem/chains'
+import { bsc } from 'viem/chains'
 import { reconnect } from '@wagmi/core'
 
 const app = useAppStore()
@@ -42,7 +42,7 @@ const tokens = {
   }
 }
 
-const chains = [mainnet, arbitrum]
+const chains = [bsc]
 const config = defaultWagmiConfig({
   chains,
   projectId,
