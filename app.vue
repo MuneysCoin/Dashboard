@@ -6,7 +6,6 @@
 
 <script setup lang="ts">
 import { createWeb3Modal, defaultWagmiConfig } from '@web3modal/wagmi'
-
 import { bsc } from 'viem/chains'
 import { reconnect } from '@wagmi/core'
 

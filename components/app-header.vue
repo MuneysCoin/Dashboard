@@ -16,11 +16,16 @@
 
 <script setup lang="ts">
 import { useAppStore } from '../stores/app';
-
-const app = useAppStore()
 import { useWeb3Modal } from '@web3modal/wagmi/vue'
+const app = useAppStore()
 
-// const modal = useWeb3Modal()
+let modal: any;
+
+onMounted(() => {
+  modal = useWeb3Modal()
+})
+
+
 
 </script>
 
