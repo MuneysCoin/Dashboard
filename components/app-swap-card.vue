@@ -6,26 +6,30 @@
     <div class="title-row d-flex justify-center align-center">
       <v-card-title>Muneys Swap</v-card-title>
     </div>
-    <div class="input-row d-flex justify-center">
+    <div class="input-row d-flex justify-center align-center">
+      <span class="label">From</span>
       <AppTokenInput
         ref="inputOne"
+        v-model="fromToken"
         :tokens="tokens"
-        :default-selection="tokens[1]"
       />
     </div>
     <div class="d-flex align-center justify-center swapp-icon-row">
-      <v-btn>
+      <v-btn
+        @click="switchFromTo"
+      >
         <v-icon 
           icon="mdi-swap-vertical-bold" 
           size="x-large"
         />
       </v-btn>
     </div>
-    <div class="input-row d-flex justify-center">
+    <div class="input-row d-flex justify-center align-center">
+      <span class="label">To</span>
       <AppTokenInput
         ref="inputTwo"
+        v-model="toToken"
         :tokens="tokens"
-        :default-selection="tokens[0]"
       />
     </div>
     <v-card-actions class="button-row d-flex justify-center align-center">
@@ -58,6 +62,15 @@ const tokens: IToken[] = [
   logoUrl: "https://etherscan.io/token/images/tethernew_32.png"
 }];
 
+const fromToken = ref(null)
+const toToken = ref(null)
+
+
+function switchFromTo(): void {
+  const oldToToken = toToken.value;
+  toToken.value = fromToken.value;
+  fromToken.value = oldToToken;
+}
 </script>
 
 <style lang="scss">
@@ -80,7 +93,19 @@ const tokens: IToken[] = [
   }
 
   .button-row {
-    min-height: 3em;
+    padding-top: 3em;
+  }
+
+  .label {
+    width: 4em;
+  }
+
+  .v-input {
+    display: flex;
+
+    .v-input__control {
+      width: 100%;
+    }
   }
 }
 </style>

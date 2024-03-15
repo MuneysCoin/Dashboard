@@ -1,12 +1,11 @@
 <template>  
   <v-autocomplete
     ref="autocomplete"
-    v-model="selectedToken"
+    :model-value="modelValue"
     :items="tokens"
     item-title="Token"
     :custom-filter="tokenFilter"
     chips
-    closable-chips
     clear-on-select
     @click="clearOnFocus"
     @update:model-value="unFocus"
@@ -41,27 +40,28 @@
 <script setup lang="ts">
 import type { IToken } from '~/models/token.model';
 
-const inputs = defineProps({
+defineProps({
   tokens: {
     type: Array<IToken>,
     required: true,
     default: []
   },
-  defaultSelection: {
+  modelValue: {
     type: Object,
     default: null
   }
 });
 
-const selectedToken = defineModel({ type: Object });
+const emit = defineEmits(["update:modelValue"])
 
-selectedToken.value = inputs.defaultSelection;
+const selectedToken = defineModel({ type: Object });
 
 function clearOnFocus(): void {
   selectedToken.value = null;
 }
 
-function unFocus(): void {
+function unFocus(event: any): void {
+  emit("update:modelValue", event)
   const element = document.activeElement as HTMLElement;
   element.blur();
 }
