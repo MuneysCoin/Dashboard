@@ -10,6 +10,7 @@
       <AppTokenInput
         ref="inputOne"
         :tokens="tokens"
+        :default-selection="tokens[1]"
       />
     </div>
     <div class="d-flex align-center justify-center swapp-icon-row">
@@ -24,6 +25,7 @@
       <AppTokenInput
         ref="inputTwo"
         :tokens="tokens"
+        :default-selection="tokens[0]"
       />
     </div>
     <v-card-actions class="button-row d-flex justify-center align-center">

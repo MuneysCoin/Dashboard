@@ -41,15 +41,21 @@
 <script setup lang="ts">
 import type { IToken } from '~/models/token.model';
 
-const selectedToken = defineModel({ type: Object });
-
-defineProps({
+const inputs = defineProps({
   tokens: {
     type: Array<IToken>,
     required: true,
     default: []
+  },
+  defaultSelection: {
+    type: Object,
+    default: null
   }
 });
+
+const selectedToken = defineModel({ type: Object });
+
+selectedToken.value = inputs.defaultSelection;
 
 function clearOnFocus(): void {
   selectedToken.value = null;
