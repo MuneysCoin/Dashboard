@@ -62,9 +62,8 @@ const tokens: IToken[] = [
   logoUrl: "https://etherscan.io/token/images/tethernew_32.png"
 }];
 
-const fromToken = ref(null)
-const toToken = ref(null)
-
+const fromToken = ref(tokens[1])
+const toToken = ref(tokens[0])
 
 function switchFromTo(): void {
   const oldToToken = toToken.value;
