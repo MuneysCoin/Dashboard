@@ -7,9 +7,9 @@
       <v-card-title>Muneys Swap</v-card-title>
     </div>
     <div class="input-row d-flex justify-center">
-      <v-autocomplete
-        label="To"
-        :items="tokensList"
+      <app-token-input
+        label="From"
+        :token-strings="tokenStrings"
       />
     </div>
     <div class="d-flex align-center justify-center swapp-icon-row">
@@ -21,9 +21,9 @@
       </v-btn>
     </div>
     <div class="input-row d-flex justify-center">
-      <v-autocomplete
+      <app-token-input
         label="To"
-        :items="tokensList"
+        :token-strings="tokenStrings"
       />
     </div>
     <v-card-actions class="button-row d-flex justify-center align-center">
@@ -35,20 +35,26 @@
 </template>
 
 <script setup lang="ts">
+import type { IToken } from '~/models/token.model';
 
-interface IToken {
-  id: string;
-  symbol: string;
-  name: string;
-  platforms: any[]
-}
+const tokens: IToken[] = [{
+  contract: "0x74c57783b980a44efa4741ba863a71aded83f71c",
+  symbol: "MUNEYS",
+  name: "MUNEYS",
+  logoUrl: "https://muneys.com/wp-content/uploads/2024/03/cropped-cropped-OIG2-photoaidcom-cropped-150x150.png"
+}, {
+  contract: "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+  symbol: "WBNB",
+  name: "BNB",
+  logoUrl: "https://bscscan.com/token/images/bnbchain2_32.png"
+}, {
+  contract: "0x55d398326f99059fF775485246999027B3197955",
+  symbol: "BSC-USD",
+  name: "USDT",
+  logoUrl: "https://etherscan.io/token/images/tethernew_32.png"
+}];
 
-const tokensData: IToken[]  = await $fetch("https://api.coingecko.com/api/v3/coins/list?include_platform=true", {
-  method: "GET"
-});
-
-const tokens: IToken[] = tokensData.filter(token => Object.keys(token.platforms)[0] === "binance-smart-chain");
-const tokensList: string[] = tokens.map(token => token.name)
+const tokenStrings = tokens.map(t => t.name);
 
 </script>
 
