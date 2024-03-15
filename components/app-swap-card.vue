@@ -65,6 +65,10 @@ const tokens: IToken[] = [
   border-radius: 5px;
   background: rgb(var(--v-theme-surface));
 
+  @media screen and (max-width: 620px){
+    width: 100%;
+  }
+
   .title-row {
     height: 5em;
   }
