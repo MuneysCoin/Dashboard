@@ -9,6 +9,7 @@ import { createWeb3Modal, defaultWagmiConfig } from '@web3modal/wagmi'
 import { bsc } from 'viem/chains'
 import { reconnect } from '@wagmi/core'
 
+onBeforeMount(() => {
 // 1. Define constants
 const projectId = 'b7234ee880f91dcffd7229b192a94c55'
 
@@ -47,4 +48,6 @@ if (process.client) {
     tokens
   })
 }
+});
+
 </script>
