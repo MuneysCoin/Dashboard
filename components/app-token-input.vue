@@ -94,7 +94,7 @@ function tokenFilter(itemTitle: string, queryText: string, item: any): boolean {
   justify-content: center;
 
   @media screen and (max-width: 600px){
-    --v-chip-height: 40px !important;
+    --v-chip-height: 32px !important;
   }
 }
 

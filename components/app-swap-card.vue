@@ -6,14 +6,24 @@
     <div class="title-row d-flex justify-center align-center">
       <v-card-title>Muneys Swap</v-card-title>
     </div>
-    <div class="input-row d-flex justify-center align-center">
-      <span class="label">From</span>
-      <AppTokenInput
-        ref="inputOne"
-        v-model="fromToken"
-        :tokens="tokens"
-      />
+    <div class="d-flex justify-center align-center w-100">
+      <div class="input-col d-flex justify-center">
+        <span class="label">From</span>
+      </div>
+      <div class="input-col d-flex flex-column w-100">
+        <div class="input-row">
+          <AppTokenInput
+            ref="inputOne"
+            v-model="fromToken"
+            :tokens="tokens"
+          />
+        </div>
+        <div class="input-row">
+          <v-text-field label="Amount" />
+        </div>
+      </div>
     </div>
+
     <div class="d-flex align-center justify-center swapp-icon-row">
       <v-btn
         @click="switchFromTo"
@@ -24,16 +34,29 @@
         />
       </v-btn>
     </div>
-    <div class="input-row d-flex justify-center align-center">
-      <span class="label">To</span>
-      <AppTokenInput
-        ref="inputTwo"
-        v-model="toToken"
-        :tokens="tokens"
-      />
+    <div class="d-flex justify-center align-center w-100">
+      <div class="input-col d-flex justify-center">
+        <span class="label">To</span>
+      </div>
+      <div class="input-col d-flex flex-column w-100">
+        <div class="input-row">
+          <AppTokenInput
+            ref="inputOne"
+            v-model="toToken"
+            :tokens="tokens"
+          />
+        </div>
+        <div class="input-row">
+          <v-text-field label="Amount" />
+        </div>
+      </div>
     </div>
     <v-card-actions class="button-row d-flex justify-center align-center">
-      <v-btn>
+      <v-btn 
+        size="large" 
+        variant="elevated"
+        color="blue"
+      >
         Swap
       </v-btn>
     </v-card-actions>
@@ -82,6 +105,11 @@ function switchFromTo(): void {
   @media screen and (max-width: 600px){
     width: 100%;
     padding: 0.5em;
+  }
+
+  .input-row {
+    padding-top: 1em;
+    padding-bottom: 1em;
   }
 
   .title-row {
