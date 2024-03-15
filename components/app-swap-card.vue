@@ -9,7 +9,7 @@
     <div class="input-row d-flex justify-center">
       <v-autocomplete
         label="To"
-        :items="['California', 'Colorado', 'Florida', 'Georgia', 'Texas', 'Wyoming']"
+        :items="tokensList"
       />
     </div>
     <div class="d-flex align-center justify-center swapp-icon-row">
@@ -23,7 +23,7 @@
     <div class="input-row d-flex justify-center">
       <v-autocomplete
         label="To"
-        :items="['California', 'Colorado', 'Florida', 'Georgia', 'Texas', 'Wyoming']"
+        :items="tokensList"
       />
     </div>
     <v-card-actions class="button-row d-flex justify-center align-center">
@@ -33,6 +33,24 @@
     </v-card-actions>
   </v-card>
 </template>
+
+<script setup lang="ts">
+
+interface IToken {
+  id: string;
+  symbol: string;
+  name: string;
+  platforms: any[]
+}
+
+const tokensData: IToken[]  = await $fetch("https://api.coingecko.com/api/v3/coins/list?include_platform=true", {
+  method: "GET"
+});
+
+const tokens: IToken[] = tokensData.filter(token => Object.keys(token.platforms)[0] === "binance-smart-chain");
+const tokensList: string[] = tokens.map(token => token.name)
+
+</script>
 
 <style lang="scss">
 .swapping-card {
