@@ -12,10 +12,17 @@
   >
     <template #chip="{ props, item }">
       <v-chip
+        class="hidden-xs"
         v-bind="props"
         :prepend-avatar="item.raw.logoUrl"
         :text="item.raw.name"
         size="x-large"
+      />
+      <v-chip
+        class="hidden-sm-and-up"
+        v-bind="props"
+        :prepend-avatar="item.raw.logoUrl"
+        :text="item.raw.name"
       />
     </template>
 
@@ -85,6 +92,10 @@ function tokenFilter(itemTitle: string, queryText: string, item: any): boolean {
   width: 100%;
   display: flex;
   justify-content: center;
+
+  @media screen and (max-width: 600px){
+    --v-chip-height: 40px !important;
+  }
 }
 
 .v-autocomplete .v-field--dirty .v-autocomplete__selection {
@@ -93,6 +104,10 @@ function tokenFilter(itemTitle: string, queryText: string, item: any): boolean {
 
 .v-autocomplete .v-field .v-field__input {
   height: 80px;
+
+  @media screen and (max-width: 600px){
+    height: 50px;
+  }
 }
 
 .v-chip__close {

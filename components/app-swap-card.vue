@@ -80,8 +80,9 @@ function switchFromTo(): void {
   border-radius: 5px;
   background: rgb(var(--v-theme-surface));
 
-  @media screen and (max-width: 620px){
+  @media screen and (max-width: 600px){
     width: 100%;
+    padding: 0.5em;
   }
 
   .title-row {
