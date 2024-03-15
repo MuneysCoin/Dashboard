@@ -20,7 +20,7 @@ import { useAppStore } from '../stores/app';
 const app = useAppStore()
 import { useWeb3Modal } from '@web3modal/wagmi/vue'
 
-const modal = useWeb3Modal()
+// const modal = useWeb3Modal()
 
 </script>
 
