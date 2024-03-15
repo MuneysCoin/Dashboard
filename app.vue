@@ -9,9 +9,8 @@ import { createWeb3Modal, defaultWagmiConfig } from '@web3modal/wagmi'
 import { bsc } from 'viem/chains'
 import { reconnect } from '@wagmi/core'
 
-onBeforeMount(() => {
-// 1. Define constants
-const projectId = 'b7234ee880f91dcffd7229b192a94c55'
+ // 1. Define constants
+ const projectId = 'b7234ee880f91dcffd7229b192a94c55'
 
 // 2. Create wagmiConfig
 const metadata = {
@@ -35,19 +34,15 @@ const config = defaultWagmiConfig({
   metadata
 })
 
-if (process.client) {
-  reconnect(config)
+reconnect(config)
 
-  // 3. Create modal
-  createWeb3Modal({
-    wagmiConfig: config,
-    projectId,
-    enableAnalytics: true, // Optional - defaults to your Cloud configuration
-    enableOnramp: true, // Optional - false as default,
-    themeMode: 'dark',
-    tokens
-  })
-}
-});
-
+// 3. Create modal
+createWeb3Modal({
+  wagmiConfig: config,
+  projectId,
+  enableAnalytics: true, // Optional - defaults to your Cloud configuration
+  enableOnramp: true, // Optional - false as default,
+  themeMode: 'dark',
+  tokens
+})
 </script>
