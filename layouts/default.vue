@@ -1,5 +1,5 @@
 <template>
-  <v-layout class="rounded rounded-md">
+  <v-layout class="d-flex rounded rounded-md">
     <AppHeader />
     <AppSidebar />
 
