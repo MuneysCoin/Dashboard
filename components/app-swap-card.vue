@@ -221,11 +221,11 @@ async function getPriceFrom(): Promise<void> {
     if (fromAmount.value && fromAmount.value > 0) {
       try {
         loading.value = true;
-        const amount = Math.floor(fromAmount.value * (10 ** toToken.value.decimals))
+        const amount = Math.floor(fromAmount.value * (10 ** fromToken.value.decimals))
         const price = await getSwapPrice(fromToken.value.contract, toToken.value.contract, BigInt(amount), account.address as ContractString, apiKeySwapping);
 
         lastPrice = price;
-        toAmount.value = price.buyAmount;
+        toAmount.value = Number(price.buyAmount) / (10 ** toToken.value.decimals);
         loading.value = false;
         await updateTokenPrices();
 
