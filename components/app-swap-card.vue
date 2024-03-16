@@ -72,7 +72,6 @@
               @update:model-value="getPriceTo"
             />
           </div>
-          <span v-if="toAmount">USD: {{ usdPrices.to * toAmount}}</span>
         </div>
       </div>
     </v-form>
@@ -127,6 +126,9 @@ import { config } from '~/configs/wagmi.config';
 import type { ISwapPriceResponse, ISwapQuoteResponse } from '~/models/swap-price.response';
 import type { IToken } from '~/models/token.model';
 
+const runtimeConfig = useRuntimeConfig();
+const apiKeySwapping = runtimeConfig.public.apiKeySwapping;
+
 const loading = ref(false);
 const allowanceSet = ref(false);
 const success = ref(false);
@@ -139,7 +141,6 @@ const finishedSwap = ref({
 });
 
 const usdPrices = ref({
-  to: 0,
   from: 0
 })
 
@@ -205,10 +206,6 @@ async function updateTokenPrices(): Promise<void> {
   const reqFrom = `https://api.geckoterminal.com/api/v2/simple/networks/bsc/token_price/${fromToken.value.contract}`;
   const resFrom: any = await $fetch(reqFrom, { method: "GET" });
   usdPrices.value.from = resFrom.data.attributes.token_prices[fromToken.value.contract];
-
-  const reqTo = `https://api.geckoterminal.com/api/v2/simple/networks/bsc/token_price/${toToken.value.contract}`;
-  const resTo: any = await $fetch(reqTo, { method: "GET" });
-  usdPrices.value.to = resTo.data.attributes.token_prices[toToken.value.contract];
 }
 
 async function getPriceFrom(): Promise<void> {
@@ -223,7 +220,7 @@ async function getPriceFrom(): Promise<void> {
         const price: ISwapPriceResponse = await $fetch(req, {
           method: "GET",
           headers: {
-            "0x-api-key": `${process.env.API_KEY_0X}`
+            "0x-api-key": apiKeySwapping!
           }
         });
 
@@ -250,7 +247,7 @@ async function getPriceTo(): Promise<void> {
         const price: ISwapPriceResponse = await $fetch(req, {
           method: "GET",
           headers: {
-            "0x-api-key": `${process.env.API_KEY_0X}`
+            "0x-api-key": apiKeySwapping!
           }
         });
 
@@ -275,7 +272,7 @@ async function swapSubmit(): Promise<void> {
       const quote: ISwapQuoteResponse = await $fetch(req, {
         method: "GET",
         headers: {
-          "0x-api-key": `${process.env.API_KEY_0X}`
+          "0x-api-key": apiKeySwapping!
         }
       });
 
@@ -324,13 +321,15 @@ async function setAllowance(): Promise<void> {
       if (data.status == "success") {
         swap.setAllowance(fromToken.value);
         allowanceSet.value = true;
+        loading.value = false;
       }
-    });
+    }).catch(() => {
+      loading.value = false;
+    })
   } else {
+    loading.value = false;
     allowanceSet.value = true;
   }
-
-  loading.value = false;
 }
 </script>
 

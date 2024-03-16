@@ -25,4 +25,9 @@ export default defineNuxtConfig({
       },
     },
   },
+  runtimeConfig: {
+    public: {
+      apiKeySwapping: process.env.API_KEY_0X
+    }
+  }
 })
