@@ -268,7 +268,7 @@ async function swapSubmit(): Promise<void> {
 
   try {
     if (lastPrice.sellAmount && lastPrice.sellAmount > 0) {       
-      const req = `https://bsc.api.0x.org/swap/v1/quote?sellToken=${fromToken.value.contract}&buyToken=${toToken.value.contract}&sellAmount=${lastPrice.sellAmount}&takerAddress=${account.address}&skipValidation=true`
+      const req = `https://bsc.api.0x.org/swap/v1/quote?sellToken=${fromToken.value.contract}&buyToken=${toToken.value.contract}&sellAmount=${lastPrice.sellAmount}&takerAddress=${account.address}`
       const quote: ISwapQuoteResponse = await $fetch(req, {
         method: "GET",
         headers: {
