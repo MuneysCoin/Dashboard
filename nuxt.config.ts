@@ -32,5 +32,37 @@ export default defineNuxtConfig({
     public: {
       apiKeySwapping: process.env.API_KEY_0X
     }
+  },
+  app: {
+    head: {
+      title: "Muneys App BETA",
+      script: [
+        {
+          async: true,
+          src: "https://www.googletagmanager.com/gtag/js?id=G-S9TMPKJ9HV"
+        },
+        {
+          innerHTML: `
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+      
+            gtag('config', 'G-S9TMPKJ9HV');
+          `
+        },
+        {
+          innerHTML: `
+            (function(h,o,t,j,a,r){
+            h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+            h._hjSettings={hjid:3908560,hjsv:6};
+            a=o.getElementsByTagName('head')[0];
+            r=o.createElement('script');r.async=1;
+            r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+            a.appendChild(r);
+            })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+          `
+        }
+      ]
+    }
   }
 })
