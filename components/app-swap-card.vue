@@ -1,5 +1,9 @@
 <template>
-  <v-card 
+  <AppConnectWalletCard 
+    v-if="!walletConnected" 
+  />
+  <v-card       
+    v-if="walletConnected"
     class="swapping-card w-100" 
     variant="flat"
   >
@@ -123,8 +127,9 @@
 import { getAccount, readContract, sendTransaction, waitForTransactionReceipt, writeContract } from '@wagmi/core';
 import { erc20Abi } from 'viem';
 import { config } from '~/configs/wagmi.config';
-import type { ISwapPriceResponse, ISwapQuoteResponse } from '~/models/swap-price.response';
+import type { ISwapPriceResponse } from '~/models/swap-price.response';
 import type { IToken } from '~/models/token.model';
+import type { ContractString } from '~/types/web3.types';
 
 const runtimeConfig = useRuntimeConfig();
 const apiKeySwapping = runtimeConfig.public.apiKeySwapping;
@@ -145,7 +150,6 @@ const usdPrices = ref({
 })
 
 const exchangeProxy = "0xdef1c0ded9bec7f1a1670819833240f027b25eff"; // https://0x.org/docs/introduction/0x-cheat-sheet#exchange-proxy-addresses
-const swap = useSwapStore();
 
 const tokens: IToken[] = [
   {
@@ -182,6 +186,9 @@ const swapForm = false;
 let timer: NodeJS.Timeout;
 
 const account = getAccount(config);
+const walletConnected = ref(account.isConnected);
+
+checkAccountConnection();
 
 const amountRules = [
   (value: string) => {
@@ -203,9 +210,7 @@ function switchFromTo(): void {
 }
 
 async function updateTokenPrices(): Promise<void> {
-  const reqFrom = `https://api.geckoterminal.com/api/v2/simple/networks/bsc/token_price/${fromToken.value.contract}`;
-  const resFrom: any = await $fetch(reqFrom, { method: "GET" });
-  usdPrices.value.from = resFrom.data.attributes.token_prices[fromToken.value.contract];
+  usdPrices.value.from = await getTokenPrice("bsc", fromToken.value.contract);
 }
 
 async function getPriceFrom(): Promise<void> {
@@ -215,14 +220,8 @@ async function getPriceFrom(): Promise<void> {
     if (fromAmount.value && fromAmount.value > 0) {
       try {
         loading.value = true;
-        const calcFromAmount = Math.floor(fromAmount.value * (10 ** fromToken.value.decimals))
-        const req = `https://bsc.api.0x.org/swap/v1/price?sellToken=${fromToken.value.contract}&buyToken=${toToken.value.contract}&sellAmount=${calcFromAmount}&takerAddress=${account.address}`
-        const price: ISwapPriceResponse = await $fetch(req, {
-          method: "GET",
-          headers: {
-            "0x-api-key": apiKeySwapping!
-          }
-        });
+        const amount = Math.floor(fromAmount.value * (10 ** toToken.value.decimals))
+        const price = await getSwapPrice(fromToken.value.contract, toToken.value.contract, BigInt(amount), account.address as ContractString, apiKeySwapping);
 
         lastPrice = price;
         toAmount.value = Number(price.buyAmount) / (10 ** toToken.value.decimals);
@@ -242,16 +241,15 @@ async function getPriceTo(): Promise<void> {
     if (toAmount.value && toAmount.value > 0) {
       try {
         loading.value = true;
-        const calcToAmount = Math.floor(toAmount.value * (10 ** toToken.value.decimals))
-        const req = `https://bsc.api.0x.org/swap/v1/price?sellToken=${fromToken.value.contract}&buyToken=${toToken.value.contract}&buyAmount=${calcToAmount}&takerAddress=${account.address}`
-        const price: ISwapPriceResponse = await $fetch(req, {
-          method: "GET",
-          headers: {
-            "0x-api-key": apiKeySwapping!
-          }
-        });
+        
+        const price = await getSwapPrice(
+          fromToken.value.contract, 
+          toToken.value.contract, 
+          tokenWithDecimals(toAmount.value, toToken.value.decimals), 
+          account.address as ContractString, 
+          apiKeySwapping
+        );
 
-        lastPrice = price;
         fromAmount.value = Number(price.sellAmount) / (10 ** fromToken.value.decimals);
         loading.value = false;
         await updateTokenPrices();
@@ -268,13 +266,7 @@ async function swapSubmit(): Promise<void> {
 
   try {
     if (lastPrice.sellAmount && lastPrice.sellAmount > 0) {       
-      const req = `https://bsc.api.0x.org/swap/v1/quote?sellToken=${fromToken.value.contract}&buyToken=${toToken.value.contract}&sellAmount=${lastPrice.sellAmount}&takerAddress=${account.address}`
-      const quote: ISwapQuoteResponse = await $fetch(req, {
-        method: "GET",
-        headers: {
-          "0x-api-key": apiKeySwapping!
-        }
-      });
+      const quote = await executeSwap(fromToken.value.contract, toToken.value.contract, BigInt(lastPrice.sellAmount), account.address as ContractString, apiKeySwapping)
 
       toAmount.value = Number(quote.buyAmount) / (10 ** toToken.value.decimals);
 
@@ -319,7 +311,6 @@ async function setAllowance(): Promise<void> {
     })
     .then(data => {
       if (data.status == "success") {
-        swap.setAllowance(fromToken.value);
         allowanceSet.value = true;
         loading.value = false;
       }
@@ -331,6 +322,15 @@ async function setAllowance(): Promise<void> {
     allowanceSet.value = true;
   }
 }
+
+function checkAccountConnection(): void {
+  walletConnected.value = getAccount(config).isConnected;
+
+  setTimeout(() => {
+    checkAccountConnection();
+  }, 1000);
+}
+
 </script>
 
 <style lang="scss">

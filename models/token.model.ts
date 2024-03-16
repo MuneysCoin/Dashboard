@@ -1,8 +1,11 @@
+import type { ContractString } from "~/types/web3.types";
+
 export interface IToken {
-  contract: string;
+  contract: ContractString;
   symbol: string;
   name: string;
   logoUrl: string;
   decimals: number;
-  allowance?: bigint;
+  amount?: number;
+  pricePerToken?: number;
 }

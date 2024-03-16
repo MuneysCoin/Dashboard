@@ -22,6 +22,9 @@ export default defineNuxtConfig({
     vue: {
       template: {
         transformAssetUrls,
+        compilerOptions: {
+          isCustomElement: (tag: string) => ["w3m-button", "w3m-connect-button"].includes(tag)
+        }
       },
     },
   },
