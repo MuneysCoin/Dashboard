@@ -181,7 +181,8 @@ const toAmount = ref<number>()
 
 let lastPrice: ISwapPriceResponse;
 
-const swapForm = false;
+// eslint-disable-next-line prefer-const
+let swapForm = false;
 
 let timer: NodeJS.Timeout;
 
@@ -250,6 +251,7 @@ async function getPriceTo(): Promise<void> {
           apiKeySwapping
         );
 
+        lastPrice = price;
         fromAmount.value = Number(price.sellAmount) / (10 ** fromToken.value.decimals);
         loading.value = false;
         await updateTokenPrices();
@@ -284,42 +286,53 @@ async function swapSubmit(): Promise<void> {
 }
 
 async function setAllowance(): Promise<void> {
-  loading.value = true
+  console.log({
+    lastPrice,
+    fromAmount,
+    toAmount
+  })
 
+  if (!lastPrice || !fromAmount || !toAmount) {
+    return;
+  }
+
+  loading.value = true
   const reqAllowance = lastPrice.sellAmount;
 
-  const allowance = await readContract(
-    config, {
-      address: (fromToken.value.contract as any),
-      abi: erc20Abi,
-      functionName: "allowance",
-      args: [ (account.address as any), exchangeProxy ]
-    }
-  );
-
-  if (allowance < lastPrice.sellAmount || !allowance) {
-    const trans = await writeContract(
+  try {
+    const allowance = await readContract(
       config, {
         address: (fromToken.value.contract as any),
         abi: erc20Abi,
-        functionName: "approve",
-        args: [ exchangeProxy, BigInt(reqAllowance) ]
-    });
+        functionName: "allowance",
+        args: [ (account.address as any), exchangeProxy ]
+      }
+    );
 
-    waitForTransactionReceipt(config, {
-      hash: trans
-    })
-    .then(data => {
+    if (allowance < lastPrice.sellAmount || !allowance) {
+      const trans = await writeContract(
+        config, {
+          address: (fromToken.value.contract as any),
+          abi: erc20Abi,
+          functionName: "approve",
+          args: [ exchangeProxy, BigInt(reqAllowance) ]
+      });
+
+      const data = await waitForTransactionReceipt(config, {
+        hash: trans
+      })
+
       if (data.status == "success") {
         allowanceSet.value = true;
         loading.value = false;
       }
-    }).catch(() => {
+    } else {
       loading.value = false;
-    })
-  } else {
+      allowanceSet.value = true;
+    }
+  } catch (err: any) {
+    console.error(err);
     loading.value = false;
-    allowanceSet.value = true;
   }
 }
 
