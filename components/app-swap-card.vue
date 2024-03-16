@@ -279,7 +279,7 @@ async function swapSubmit(): Promise<void> {
       toAmount.value = Number(quote.buyAmount) / (10 ** toToken.value.decimals);
 
       const trans = await sendTransaction(config, quote)
-        waitForTransactionReceipt(config, {
+      await waitForTransactionReceipt(config, {
         hash: trans
       })
 
