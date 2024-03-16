@@ -1,3 +1,5 @@
+import type { ContractString } from "~/types/web3.types";
+
 export interface ISwapPriceResponse {
   buyAmount: number;
   sellAmount: number;
@@ -7,18 +9,18 @@ export interface ISwapPriceResponse {
 export interface ISwapQuoteResponse {
   chainId: number;
   price: number;
-  to: `0x${string}`;
+  to: ContractString;
   value: bigint;
   gasPrice: bigint;
   guaranteedPrice: number;
   estimatedPriceImpact: number;
-  data: `0x${string}`;
+  data: ContractString;
   gas: bigint;
   estimatedGas: number;
   protocolFee: number;
   minimumProtocolFee: number;
-  buyTokenAddress: `0x${string}`;
-  sellTokenAddress: `0x${string}`;
+  buyTokenAddress: ContractString;
+  sellTokenAddress: ContractString;
   buyAmount: number;
   sellAmount: number;
   sources: {
@@ -26,19 +28,19 @@ export interface ISwapQuoteResponse {
     proportion: number
   }[],
   orders: {
-    makerToken: `0x${string}`;
-    takerToken: `0x${string}`;
+    makerToken: ContractString;
+    takerToken: ContractString;
     makerAmount: number;
     takerAmount: number;
     fillData: {
-      tokenAddressPath: `0x${string}`[],
-      router: `0x${string}`;
+      tokenAddressPath: ContractString[],
+      router: ContractString;
     },
     source: string;
-    sourcePathId: `0x${string}`;
+    sourcePathId: ContractString;
     type: number;
   }[],
-  allowanceTarget: `0x${string}`;
+  allowanceTarget: ContractString;
   sellTokenToEthRate: number;
   buyTokenToEthRate: number;
   fees: {
