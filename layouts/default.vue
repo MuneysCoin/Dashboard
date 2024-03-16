@@ -1,5 +1,5 @@
 <template>
-  <v-layout class="rounded rounded-md">
+  <v-layout class="d-flex rounded rounded-md">
     <AppHeader />
     <AppSidebar />
 
@@ -13,12 +13,5 @@
 </template>
 
 <script setup lang="ts">
-import { useWeb3Store } from '#imports'; 
-
-const web3 = useWeb3Store()
-
-onMounted(() => {
-  web3.connect();
-})
 
 </script>

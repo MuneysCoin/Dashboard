@@ -3,7 +3,7 @@ import vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   devtools: { enabled: true },
-  ssr: true,
+  ssr: false,
   build: {
     transpile: ['vuetify'],
   },
@@ -15,7 +15,8 @@ export default defineNuxtConfig({
       })
     },
     "@nuxtjs/eslint-module",
-    "@pinia/nuxt"
+    "@pinia/nuxt",
+    "@pinia-plugin-persistedstate/nuxt"
   ],
   vite: {
     vue: {
@@ -24,4 +25,9 @@ export default defineNuxtConfig({
       },
     },
   },
+  runtimeConfig: {
+    public: {
+      apiKeySwapping: process.env.API_KEY_0X
+    }
+  }
 })
