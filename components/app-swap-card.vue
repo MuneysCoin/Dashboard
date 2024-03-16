@@ -224,7 +224,7 @@ async function getPriceFrom(): Promise<void> {
         const price = await getSwapPrice(fromToken.value.contract, toToken.value.contract, BigInt(amount), account.address as ContractString, apiKeySwapping);
 
         lastPrice = price;
-        toAmount.value = Number(price.buyAmount) / (10 ** toToken.value.decimals);
+        toAmount.value = price.buyAmount;
         loading.value = false;
         await updateTokenPrices();
 
