@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@mdi/font": "^7.4.47",
+    "@pinia-plugin-persistedstate/nuxt": "^1.2.0",
     "@pinia/nuxt": "^0.5.1",
     "@wagmi/connectors": "4.1.14",
     "@wagmi/core": "2.6.5",

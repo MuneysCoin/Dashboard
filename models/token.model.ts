@@ -3,4 +3,6 @@ export interface IToken {
   symbol: string;
   name: string;
   logoUrl: string;
+  decimals: number;
+  allowance?: bigint;
 }

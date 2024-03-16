@@ -7,6 +7,7 @@
     :custom-filter="tokenFilter"
     chips
     clear-on-select
+    :disabled="disabled"
     @click="clearOnFocus"
     @update:model-value="unFocus"
   >
@@ -56,6 +57,10 @@ defineProps({
   modelValue: {
     type: Object,
     default: null
+  },
+  disabled: {
+    type: Boolean,
+    default: false
   }
 });
 

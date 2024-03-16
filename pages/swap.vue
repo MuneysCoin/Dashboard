@@ -10,6 +10,6 @@
 
 <style lang="scss">
 .swap {
-  min-height: 40em;
+  padding-top: 4em !important;
 }
 </style>
