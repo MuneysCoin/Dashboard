@@ -1,6 +1,6 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
-  <v-app-bar title="Muneys App">
+  <v-app-bar title="Muneys App BETA">
     <w3m-button />
     <v-app-bar-nav-icon
       class="d-flex d-md-none" 
