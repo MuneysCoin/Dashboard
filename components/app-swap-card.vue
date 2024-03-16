@@ -21,6 +21,7 @@
               v-model="fromToken"
               :tokens="tokens"
               :disabled="loading"
+              @update:model-value="updateTokenPrices"
             />
           </div>
           <div class="input-row">
@@ -33,6 +34,7 @@
               @update:model-value="getPriceFrom"
             />
           </div>
+          <span v-if="fromAmount">USD: {{ usdPrices.from * fromAmount }}</span>
         </div>
       </div>
 
@@ -57,6 +59,7 @@
               v-model="toToken"
               :tokens="tokens"
               :disabled="loading"
+              @update:model-value="updateTokenPrices"
             />
           </div>
           <div class="input-row">
@@ -69,6 +72,7 @@
               @update:model-value="getPriceTo"
             />
           </div>
+          <span v-if="toAmount">USD: {{ usdPrices.to * toAmount}}</span>
         </div>
       </div>
     </v-form>
@@ -101,9 +105,18 @@
     </v-card-actions>
   </v-card>
   <AppSwapDialog 
-    :dialog="dialog" 
-    :finished-swap="finishedSwap"
-    @update:dialog="dialog = false"
+    :dialog="success" 
+    :text="`Swapped ${finishedSwap.fromTokenAmount} (${finishedSwap.fromTokenName}) for ${finishedSwap.toTokenAmount} (${finishedSwap.toTokenName})`"
+    icon="mdi-check"
+    title="Successfully swapped!"
+    @update:dialog="success = false"
+  />
+  <AppSwapDialog 
+    :dialog="failure" 
+    :text="`Swap failed. Please try again.`"
+    icon="mdi-alert-circle-outline"
+    title="Swap failed!"
+    @update:dialog="failure = false"
   />
 </template>
 
@@ -116,13 +129,19 @@ import type { IToken } from '~/models/token.model';
 
 const loading = ref(false);
 const allowanceSet = ref(false);
-const dialog = ref(false)
+const success = ref(false);
+const failure = ref(false);
 const finishedSwap = ref({
   fromTokenName: "",
   fromTokenAmount: 0,
   toTokenName: "",
   toTokenAmount: 0
 });
+
+const usdPrices = ref({
+  to: 0,
+  from: 0
+})
 
 const exchangeProxy = "0xdef1c0ded9bec7f1a1670819833240f027b25eff"; // https://0x.org/docs/introduction/0x-cheat-sheet#exchange-proxy-addresses
 const swap = useSwapStore();
@@ -179,9 +198,21 @@ function switchFromTo(): void {
 
   fromAmount.value = oldAmountTo;
   fromToken.value = oldToToken;
+  updateTokenPrices();
+}
+
+async function updateTokenPrices(): Promise<void> {
+  const reqFrom = `https://api.geckoterminal.com/api/v2/simple/networks/bsc/token_price/${fromToken.value.contract}`;
+  const resFrom: any = await $fetch(reqFrom, { method: "GET" });
+  usdPrices.value.from = resFrom.data.attributes.token_prices[fromToken.value.contract];
+
+  const reqTo = `https://api.geckoterminal.com/api/v2/simple/networks/bsc/token_price/${toToken.value.contract}`;
+  const resTo: any = await $fetch(reqTo, { method: "GET" });
+  usdPrices.value.to = resTo.data.attributes.token_prices[toToken.value.contract];
 }
 
 async function getPriceFrom(): Promise<void> {
+
   clearTimeout(timer)
   timer = setTimeout(async () => {
     if (fromAmount.value && fromAmount.value > 0) {
@@ -199,6 +230,8 @@ async function getPriceFrom(): Promise<void> {
         lastPrice = price;
         toAmount.value = Number(price.buyAmount) / (10 ** toToken.value.decimals);
         loading.value = false;
+        await updateTokenPrices();
+
       } catch (err: any) {
         loading.value = false;
       }
@@ -224,6 +257,8 @@ async function getPriceTo(): Promise<void> {
         lastPrice = price;
         fromAmount.value = Number(price.sellAmount) / (10 ** fromToken.value.decimals);
         loading.value = false;
+        await updateTokenPrices();
+
       } catch (err: any) {
         loading.value = false;
       }
@@ -245,11 +280,16 @@ async function swapSubmit(): Promise<void> {
       });
 
       toAmount.value = Number(quote.buyAmount) / (10 ** toToken.value.decimals);
-      await sendTransaction(config, quote);
-      dialog.value = true;
+
+      const trans = await sendTransaction(config, quote)
+        waitForTransactionReceipt(config, {
+        hash: trans
+      })
+
+      success.value = true;
     } 
   } catch (err: any) {
-    loading.value = false;
+    failure.value = true;
   }
   loading.value = false;
 }
